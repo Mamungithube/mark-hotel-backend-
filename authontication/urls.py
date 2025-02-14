@@ -1,7 +1,7 @@
 from rest_framework.routers import DefaultRouter
 from django.urls import path, include
 from . import views
-from .views import RegisteredUsersCount,UserRegistrationAPIView,activate,UserLoginApiView
+from .views import RegisteredUsersCount,UserRegistrationAPIView,activate,UserLoginApiView,UserLogoutApiView
 # from .views import UserProfileView, ChangePasswordViewSet,UserLoginApiView,UserLogoutApiView,RegisteredUsersCount,activate,IsAdminStatusAPIView
 router = DefaultRouter()
 
@@ -12,7 +12,7 @@ urlpatterns = [
     path('', include(router.urls)),
     path('register/', UserRegistrationAPIView.as_view(), name='register'),
     path('login/', UserLoginApiView.as_view(), name='login'),
-    # path('logout/', UserLogoutApiView.as_view(), name='logout'),
+    path('logout/', UserLogoutApiView.as_view(), name='logout'),
     # path('api/profile/', UserProfileView.as_view(), name='user-profile'),
     path('active/<uid64>/<token>', activate, name='activate'),
     # path('registered-users-count/', RegisteredUsersCount.as_view(), name='registered_users_count'),

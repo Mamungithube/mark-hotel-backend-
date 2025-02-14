@@ -43,7 +43,7 @@ class UserRegistrationAPIView(APIView):
             user = serializer.save()
             token = default_token_generator.make_token(user)
             uid = urlsafe_base64_encode(force_bytes(user.pk))
-            confirm_link = f"https://online-course-rose.vercel.app/Customer/active/{uid}/{token}"
+            confirm_link = f"http://127.0.0.1:8000/authontication/active/{uid}/{token}"
             email_subject = "Confirm your email"
             email_body = render_to_string('confirm_email.html', {'confirm_link': confirm_link})
             email = EmailMultiAlternatives(email_subject, '', to=[user.email])
@@ -65,9 +65,9 @@ def activate(request, uid64, token):
     if user is not None and default_token_generator.check_token(user, token):
         user.is_active = True
         user.save()
-        # return redirect("https://online-schools.netlify.app/login.html")
-    # else:
-        # return redirect("https://online-schools.netlify.app/registetion.html")
+        return redirect("http://127.0.0.1:8000/authontication/login/")
+    else:
+        return redirect("http://127.0.0.1:8000/authontication/register/")
 
 
 class UserLoginApiView(APIView):
@@ -93,14 +93,14 @@ class UserLoginApiView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# class UserLogoutApiView(APIView):
-#     def get(self, request):
-#         user = request.user
-#         if hasattr(user, 'auth_token'):
-#             user.auth_token.delete()
+class UserLogoutApiView(APIView):
+    def get(self, request):
+        user = request.user
+        if hasattr(user, 'auth_token'):
+            user.auth_token.delete()
         
-#         logout(request)
-#         return Response(status=status.HTTP_204_NO_CONTENT)
+        logout(request)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 # class ChangePasswordViewSet(viewsets.GenericViewSet):
 #     serializer_class = serializers.ChangePasswordSerializer
