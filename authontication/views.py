@@ -88,6 +88,7 @@ class UserLoginApiView(APIView):
                 login(request, user)
                 print(token.key)
                 return Response({"token": token.key, 'user_id': user.id}, status=status.HTTP_200_OK)
+                        
             else:
                 return Response({"error": "Authentication failed"}, status=status.HTTP_401_UNAUTHORIZED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -140,11 +141,11 @@ class UserLogoutApiView(APIView):
 
 
 
-# class IsAdminStatusAPIView(APIView):
-#     parser_classes = [IsAuthenticatedOrReadOnly]
+class IsAdminStatusAPIView(APIView):
+    parser_classes = [IsAuthenticatedOrReadOnly]
     
-#     def get(self, request):
-#         user = request.user
-#         if user.is_staff:
-#             return Response({"is_admin" : True})
-#         return Response({"is_admin" : False})
+    def get(self, request):
+        user = request.user
+        if user.is_staff:
+            return Response({"is_admin" : True})
+        return Response({"is_admin" : False})
