@@ -92,14 +92,21 @@ class UserLoginApiView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import TokenAuthentication
+
 class UserLogoutApiView(APIView):
+    authentication_classes = [TokenAuthentication]  # টোকেন অথেনটিকেশন
+    permission_classes = [IsAuthenticated]  # শুধুমাত্র লগইন ইউজাররা এক্সেস পাবে
+
     def get(self, request):
         user = request.user
         if hasattr(user, 'auth_token'):
-            user.auth_token.delete()
+            user.auth_token.delete()  # টোকেন ডিলিট করো
         
-        logout(request)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        logout(request)  # Django সেশন লগআউট (কিন্তু সেশন নাও থাকতে পারে)
+        return Response({"message": "Logout successful"}, status=status.HTTP_204_NO_CONTENT)
+
 
 # class ChangePasswordViewSet(viewsets.GenericViewSet):
 #     serializer_class = serializers.ChangePasswordSerializer

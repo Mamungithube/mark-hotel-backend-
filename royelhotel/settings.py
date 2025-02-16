@@ -35,10 +35,10 @@ ALLOWED_HOSTS = []
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
-    ],
-    'DEFAULT_RENDERER_CLASSES': [
-        'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',  # ✅ টোকেন অথেনটিকেশন যোগ করো
     ],
 }
 
@@ -47,6 +47,7 @@ REST_FRAMEWORK = {
 INSTALLED_APPS = [
     "corsheaders",
     'authontication',
+    'review',
     'rest_framework',
     'rest_framework.authtoken', 
     'django.contrib.admin',
