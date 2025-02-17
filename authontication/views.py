@@ -95,17 +95,26 @@ class UserLoginApiView(APIView):
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 
-class UserLogoutApiView(APIView):
-    authentication_classes = [TokenAuthentication]  # টোকেন অথেনটিকেশন
-    permission_classes = [IsAuthenticated]  # শুধুমাত্র লগইন ইউজাররা এক্সেস পাবে
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.views import APIView
+from django.contrib.auth import logout
 
-    def get(self, request):
+class UserLogoutApiView(APIView):
+    authentication_classes = [TokenAuthentication]  # Require token authentication
+    permission_classes = [IsAuthenticated]  # Only authenticated users can logout
+
+    def post(self, request):
         user = request.user
         if hasattr(user, 'auth_token'):
-            user.auth_token.delete()  # টোকেন ডিলিট করো
+            user.auth_token.delete()  # Delete the authentication token
         
-        logout(request)  # Django সেশন লগআউট (কিন্তু সেশন নাও থাকতে পারে)
+        logout(request)  # Log out the user (if session-based authentication is used)
+
         return Response({"message": "Logout successful"}, status=status.HTTP_204_NO_CONTENT)
+
 
 
 # class ChangePasswordViewSet(viewsets.GenericViewSet):
