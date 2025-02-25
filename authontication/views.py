@@ -117,23 +117,23 @@ class UserLogoutApiView(APIView):
 
 
 
-# class ChangePasswordViewSet(viewsets.GenericViewSet):
-#     serializer_class = serializers.ChangePasswordSerializer
-#     model = User
+class ChangePasswordViewSet(viewsets.GenericViewSet):
+    serializer_class = serializers.ChangePasswordSerializer
+    model = User
 
-#     def create(self, request, *args, **kwargs):
-#         serializer = self.get_serializer(data=request.data)
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
 
-#         if serializer.is_valid():
-#             user = request.user
-#             if not user.check_password(serializer.validated_data['old_password']):
-#                 return Response({"old_password": ["Wrong password."]}, status=status.HTTP_400_BAD_REQUEST)
+        if serializer.is_valid():
+            user = request.user
+            if not user.check_password(serializer.validated_data['old_password']):
+                return Response({"old_password": ["Wrong password."]}, status=status.HTTP_400_BAD_REQUEST)
             
-#             user.set_password(serializer.validated_data['new_password'])
-#             user.save()
-#             return Response(status=status.HTTP_204_NO_CONTENT)
+            user.set_password(serializer.validated_data['new_password'])
+            user.save()
+            return Response(status=status.HTTP_204_NO_CONTENT)
         
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 # class UserProfileView(APIView):

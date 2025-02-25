@@ -38,13 +38,20 @@ class UserLoginSerializer(serializers.Serializer):
     username = serializers.CharField(required = True)
     password = serializers.CharField(required = True)
 
-# class ChangePasswordSerializer(serializers.Serializer):
-#     old_password = serializers.CharField(required=True, write_only=True)
-#     new_password = serializers.CharField(required=True, write_only=True)
+class ChangePasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(required=True, write_only=True)
+    new_password = serializers.CharField(required=True, write_only=True)
+    confirm_password = serializers.CharField(required=True, write_only=True)
 
-#     def validate_new_password(self, value):
-#         password_validation.validate_password(value, self.context['request'].user)
-#         return value
+    def validate_new_password(self, value):
+        password_validation.validate_password(value, self.context['request'].user)
+        return value
+
+    def validate(self, data):
+        if data["new_password"] != data["confirm_password"]:
+            raise serializers.ValidationError({"confirm_password": "New password and confirm password do not match."})
+        return data
+
     
 # # serializers.py
 # from rest_framework import serializers

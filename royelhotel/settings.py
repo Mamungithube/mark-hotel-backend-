@@ -39,6 +39,7 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',  # ✅ টোকেন অথেনটিকেশন যোগ করো
+        'rest_framework.authentication.SessionAuthentication',  # ✅ API Browsable জন্য Session
     ],
 }
 
