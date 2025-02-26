@@ -71,61 +71,14 @@ class RoomSerializer(serializers.ModelSerializer):
 class BookingSerializer(serializers.ModelSerializer):
     room_details = RoomSerializer(source='room', read_only=True)
     user_details = UserSerializer(source='user', read_only=True)
+
+    user = serializers.ReadOnlyField(source='user.username')
+    room_type = serializers.ReadOnlyField(source='room.room_type.name')  # ✅ সঠিক source ব্যবহার
     
     class Meta:
         model = Booking
         fields = ['id', 'user', 'user_details', 'room', 'room_details', 
+                  'room_type',  # ✅ এখানে যোগ করুন
                   'check_in_date', 'check_out_date', 'adults', 'children',
                   'booking_date', 'status', 'special_requests', 'total_price']
         read_only_fields = ['booking_date', 'status', 'total_price']
-    
-    def validate(self, data):
-        """
-        Check that the check-in date is before the check-out date and
-        that the room is available for the requested dates.
-        """
-        if data['check_in_date'] >= data['check_out_date']:
-            raise serializers.ValidationError("Check-out date must be after check-in date")
-        
-        if data['check_in_date'] < timezone.now().date():
-            raise serializers.ValidationError("Check-in date cannot be in the past")
-        
-        # Check if room is available for the requested dates
-        room = data['room']
-        check_in = data['check_in_date']
-        check_out = data['check_out_date']
-        
-        # Exclude current booking when updating
-        booking_id = self.instance.id if self.instance else None
-        
-        conflicting_bookings = Booking.objects.filter(
-            room=room,
-            check_in_date__lt=check_out,
-            check_out_date__gt=check_in,
-            status__in=['pending', 'confirmed']
-        )
-        
-        if booking_id:
-            conflicting_bookings = conflicting_bookings.exclude(id=booking_id)
-        
-        if conflicting_bookings.exists():
-            raise serializers.ValidationError("Room is not available for the selected dates")
-        
-        return data
-    
-    def create(self, validated_data):
-        # Calculate total price
-        check_in = validated_data['check_in_date']
-        check_out = validated_data['check_out_date']
-        days = (check_out - check_in).days
-        room = validated_data['room']
-        price_per_night = room.room_type.price_per_night
-        
-        validated_data['total_price'] = price_per_night * days
-        
-        return super().create(validated_data)
-
-    user = serializers.ReadOnlyField(source='booking.user.username')
-    room_type = serializers.ReadOnlyField(source='booking.room.room_type.name')
-    
- 

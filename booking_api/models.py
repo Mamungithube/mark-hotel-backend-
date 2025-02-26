@@ -29,7 +29,7 @@ class Room(models.Model):
 
 class RoomImage(models.Model):
     room_type = models.ForeignKey(RoomType, on_delete=models.CASCADE, related_name='images')
-    image = models.ImageField(upload_to='room_images/')
+    image = models.CharField(max_length=100 , default='')
     is_primary = models.BooleanField(default=False)
     
     def __str__(self):

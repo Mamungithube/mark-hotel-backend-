@@ -42,7 +42,9 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',  # ✅ API Browsable জন্য Session
     ],
 }
-
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+}
 # Application definition
 
 INSTALLED_APPS = [
@@ -52,6 +54,7 @@ INSTALLED_APPS = [
     'booking_api',
     'rest_framework',
     'rest_framework.authtoken', 
+    'django_filters',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
