@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     "corsheaders",
     'authontication',
     'review',
+    'booking_api',
     'rest_framework',
     'rest_framework.authtoken', 
     'django.contrib.admin',
